@@ -19,7 +19,7 @@ def load_data():
 """
 def prediction(beta_0, beta_1, X):
     
-    y_pred = None
+    y_pred = beta_0 + beta_1 * X
     
     return y_pred
     
@@ -46,10 +46,11 @@ def gradient_descent(X, y, iters, lr):
     
     for i in range(iters):
         
-        y_pred = None
-        loss = np.mean(np.square(y - y_pred))
+        y_pred = beta_0 + beta_1 * X    #예측값
+        loss = np.mean(np.square(y - y_pred)) #손실
         
-        beta0_delta, beta1_delta = None
+        beta0_delta = -2 * np.mean(y - y_pred)
+        beta1_delta = -2 * np.mean(X*(y - y_pred))    #기울기
         
         beta_0 -= beta0_delta
         beta_1 -= beta1_delta
