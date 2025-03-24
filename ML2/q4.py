@@ -20,11 +20,11 @@ def load_data():
    데이터에 추가하는 함수를 구현합니다.
 """
 
-def Polynomial_transform(X):
+def Polynomial_transform(X, degree=2):
     
-    poly_feat = None
+    poly_feat = PolynomialFeatures(degree=2, include_bias=True)
     
-    poly_X = None
+    poly_X = poly_feat.fit_transform(X)
     
     print("변환 이후 X 데이터\n",poly_X[:3])
     
@@ -39,20 +39,24 @@ def Polynomial_transform(X):
 
 def Multi_Regression(poly_x, y):
     
-    multilinear = None
+    multilinear = LinearRegression()
     
-    None
+    multilinear.fit(poly_x,y)
     
     return multilinear
     
     
 # 그래프를 시각화하는 함수입니다.
 def plotting_graph(x,y,predicted):
-    fig = plt.figure()
-    plt.scatter(x, y)
-    
-    plt.scatter(x, predicted,c='r')
-    plt.savefig("test.png")
+    plt.figure(figsize=(8, 6))
+    plt.scatter(x, y,  color="blue")  # 실제 데이터
+    plt.scatter(x, predicted, color="red")  # 예측값
+    plt.legend()
+    plt.xlabel("X")
+    plt.ylabel("y")
+    plt.title("Polynomial Regression Results")
+    plt.savefig("test.png")  # 그래프 저장
+    plt.show()
     
     
 """
@@ -66,11 +70,11 @@ def main():
     
     X,y = load_data()
     
-    poly_x = Polynomial_transform(X)
+    poly_x = Polynomial_transform(X, degree=2)
     
     linear_model = Multi_Regression(poly_x,y)
-    
-    predicted = None
+    predicted = linear_model.predict(poly_x)
+   
     
     plotting_graph(X,y,predicted)
     

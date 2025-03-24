@@ -2,7 +2,7 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.linear_model import LinearRegression
 
 # sklearn의 KFold 모듈 불러오기
@@ -15,9 +15,10 @@ from sklearn.model_selection import KFold
 """
 def load_data():
     
-    X, y = None
+    data = fetch_california_housing()
+    X, y = data.data, data.target
     
-    train_X, test_X, train_y, test_y = None
+    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.2, random_state=42)
     
     return train_X, test_X, train_y, test_y
     
@@ -34,7 +35,7 @@ def kfold_regression(train_X, train_y):
     # 각 fold 마다 모델 검증 점수를 저장하기 위한 빈 리스트 생성하기
     model_scores = []
     
-    kfold = None
+    kfold = KFold(n_splits=n_split)
     
     for train_idx, val_idx in None:
         
