@@ -40,13 +40,13 @@ def plotting_graph(test_X, test_y, predicted):
 """
 def main():
     
-    train_X, train_y, test_X, test_y = None
+    train_X, train_y, test_X, test_y = load_data()
     
-    lr = None
+    lr = Linear_Regression(train_X, train_y)
     
-    predicted = None
+    predicted = lr.predict(test_X)
     
-    R_squared  = None
+    R_squared  = r2_score(test_y, predicted)
     
     print("> R_squared :",R_squared)
     

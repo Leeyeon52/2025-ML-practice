@@ -56,14 +56,14 @@ def plotting_graph(test_X, test_y, predicted):
 """
 def main():
     
-    train_X, train_y, test_X, test_y = None
+    train_X, train_y, test_X, test_y = load_data()
     
-    lr = None
+    lr = Linear_Regression(train_X, train_y)
     
-    predicted = None
+    predicted = lr.predict(test_X)
     
-    MAE = None
-    MSE = None
+    MAE = mean_absolute_error(test_y, predicted)
+    MSE = mean_squared_error(test_y, predicted)
     
     print("> MSE :",MSE)
     print("> MAE :",MAE)

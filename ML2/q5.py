@@ -27,7 +27,7 @@ def load_data():
 2. K-fold 교차 검증을 통한 
    모델 학습 및 예측 수행을 진행할 함수를 구현합니다.
 """
-def kfold_regression(train_X, train_y):
+def kfold_regression(train_X, train_y, n_splits=5):
     
     # 반복문 내에서 횟수를 표시하기 위한 변수 설정하기
     n_iter = 0
@@ -35,9 +35,9 @@ def kfold_regression(train_X, train_y):
     # 각 fold 마다 모델 검증 점수를 저장하기 위한 빈 리스트 생성하기
     model_scores = []
     
-    kfold = KFold(n_splits=n_split)
+    kfold = KFold(n_splits=n_splits, shuffle=True, random_state=42)
     
-    for train_idx, val_idx in None:
+    for train_idx, val_idx in kfold.split(train_X):
         
         X_train, X_val = train_X[train_idx], train_X[val_idx]
         y_train, y_val = train_y[train_idx], train_y[val_idx]
@@ -45,10 +45,10 @@ def kfold_regression(train_X, train_y):
         # 동일한 가중치 사용을 위해 각 fold 마다 모델 초기화 하기
         model = LinearRegression()
         
-        None
+        model.fit(X_train,y_train)
         
         # 각 Iter 별 모델 평가 점수 측정
-        score = None
+        score = model.score(X_val, y_val)
         
         # 학습용 데이터의 크기를 저장합니다.
         train_size = X_train.shape[0]
