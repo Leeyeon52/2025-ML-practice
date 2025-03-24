@@ -21,7 +21,7 @@ def load_data():
     X = 5*np.random.rand(100,1)
     y = 3*X + 5*np.random.rand(100,1)
     
-    train_X, test_X, train_y, test_y = None
+    train_X, test_X, train_y, test_y = train_test_split(X,y, test_size=0.2, random_state=42)
     
     return train_X, test_X, train_y, test_y
 
@@ -34,7 +34,7 @@ def load_data():
 """
 def regression_model(train_X, train_y):
     
-    simplelinear = None
+    simplelinear = LinearRegression()
     
     simplelinear.fit(train_X, train_y)
     
@@ -65,12 +65,13 @@ def main():
     
     simplelinear = regression_model(train_X, train_y)
     
-    predicted = None
+    predicted = simplelinear.predict(test_X)
     
-    model_score = None
+    model_score = simplelinear.score(test_X, test_y)  
+
     
-    beta_0 = None
-    beta_1 = None
+    beta_0 = simplelinear.intercept_[0]
+    beta_1 = simplelinear.coef_[0][0]
     
     print("> beta_0 : ",beta_0)
     print("> beta_1 : ",beta_1)
