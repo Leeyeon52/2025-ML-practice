@@ -7,35 +7,42 @@ import matplotlib.pyplot as plt
 
 # 데이터를 불러오고, 데이터 프레임 형태로 만든 후 반환하는 함수입니다.
 def load_data():
+    
     iris = load_iris()
-    irisDF = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+    
+    irisDF = pd.DataFrame(data = iris.data, columns = iris.feature_names)
+    
     irisDF['target'] = iris.target
+    
     return irisDF
-
-
+    
 """
 1. GMM 클러스터링을 
    수행하는 함수를 구현합니다.
 """
 def gmm_clus(irisDF):
-    # GMM 모델을 초기화하고 학습
-    gmm = GaussianMixture(n_components=3, random_state=42)  # 군집 개수 K=3으로 설정
-    irisDF['cluster'] = gmm.fit_predict(irisDF.iloc[:, :-1])  # 'target' 열 제외하고 군집화
+    
+    gmm = GaussianMixture(n_components=3, random_state=100)
 
+    iris_data = irisDF.drop(columns=['target'])
+    gmm.fit(iris_data)
+    
+    irisDF['cluster'] = gmm.predict(iris_data)
+    
     # 군집화 결과를 보기 위해 groupby 함수를 사용해보겠습니다.
-    iris_result = irisDF.groupby(['target', 'cluster'])['sepal length (cm)'].count()
+    iris_result = irisDF.groupby(['target','cluster'])['sepal length (cm)'].count()
     print(iris_result)
     
     return iris_result, irisDF
 
-
 # 군집화 결과 시각화하기
 def Visualize(irisDF):
+    
     pca = PCA(n_components=2)
-    pca_transformed = pca.fit_transform(irisDF.iloc[:, :-2])  # 'target'과 'cluster' 열 제외하고 PCA 적용
+    pca_transformed = pca.fit_transform(irisDF)
 
-    irisDF['pca_x'] = pca_transformed[:, 0]
-    irisDF['pca_y'] = pca_transformed[:, 1]
+    irisDF['pca_x'] = pca_transformed[:,0]
+    irisDF['pca_y'] = pca_transformed[:,1]
 
     # 군집된 값이 0, 1, 2 인 경우, 인덱스 추출
     idx_0 = irisDF[irisDF['cluster'] == 0].index
@@ -45,23 +52,25 @@ def Visualize(irisDF):
     # 각 군집 인덱스의 pca_x, pca_y 값 추출 및 시각화
     fig, ax = plt.subplots()
     
-    ax.scatter(x=irisDF.loc[idx_0, 'pca_x'], y=irisDF.loc[idx_0, 'pca_y'], marker='o', label='Cluster 0')
-    ax.scatter(x=irisDF.loc[idx_1, 'pca_x'], y=irisDF.loc[idx_1, 'pca_y'], marker='s', label='Cluster 1')
-    ax.scatter(x=irisDF.loc[idx_2, 'pca_x'], y=irisDF.loc[idx_2, 'pca_y'], marker='^', label='Cluster 2')
-    ax.set_title('GMM Clustering')
+    ax.scatter(x=irisDF.loc[idx_0, 'pca_x'], y= irisDF.loc[idx_0, 'pca_y'], marker = 'o')
+    ax.scatter(x=irisDF.loc[idx_1, 'pca_x'], y= irisDF.loc[idx_1, 'pca_y'], marker = 's')
+    ax.scatter(x=irisDF.loc[idx_2, 'pca_x'], y= irisDF.loc[idx_2, 'pca_y'], marker = '^')
+    ax.set_title('GMM')
     ax.set_xlabel('PCA1')
     ax.set_ylabel('PCA2')
-    ax.legend()
     
     fig.savefig("plot.png")
-    plt.show()
 
 
 def main():
+    
     irisDF = load_data()
+    
     iris_result, irisDF = gmm_clus(irisDF)
+    
     Visualize(irisDF)
-
-
+    
+    
 if __name__ == "__main__":
     main()
+
